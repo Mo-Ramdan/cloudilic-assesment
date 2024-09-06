@@ -33,3 +33,7 @@ async def scrape_and_summarize(request: UrlRequest):
         logger.error(f"Error occurred during scraping: {e}")
         raise HTTPException(status_code=400, detail="Can't scrape or summarize")
     return {"data": summary}
+
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}
