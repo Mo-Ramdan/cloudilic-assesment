@@ -1,0 +1,7 @@
+python-dotenv
+groq
+openai
+beautifulsoup4
+requests
+nltk
+fastapi[standard]
