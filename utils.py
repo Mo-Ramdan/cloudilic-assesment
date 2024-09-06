@@ -32,35 +32,27 @@ def summarize_text(input_text):
         return None     
 
     summary = res.choices[0].message.content
-    return summary
+    return {"data": summary}
 
-def scrape_then_summarize(url:str):
+def scrape_url(url:str):
     try:
-        response = requests.get(url)
-        if response.status_code != 200:
-            print(f"Failed to get content from {url}")
-            return None
+            response = requests.get(url)
+            if response.status_code != 200:
+                print(f"Failed to get content from {url}")
+                return None
 
-        soup = BeautifulSoup(response.content, 'html.parser')
-        print("Scrapping finished. Cleaning...")
+            soup = BeautifulSoup(response.content, 'html.parser')
+            print("Scrapping finished. Cleaning...")
 
-        paragraphs = soup.find_all('p')
-        page_text = ' '.join([p.text for p in paragraphs])
-        cleaned_text = clean_text(page_text)
+            paragraphs = soup.find_all('p')
+            page_text = ' '.join([p.text for p in paragraphs])
+            cleaned_text = clean_text(page_text)
 
-        if not cleaned_text or len(cleaned_text.strip()) < 50:
-            print("Not enough content to summarize.")
-            return None
-        print("Cleaning finished. Summarizing...")
-
-        summary = summarize_text(cleaned_text)
-        if summary:
-            print("Summary generation finished.")
-            return summary
-        else:
-            print("Failed to generate summary.")
-
+            if not cleaned_text or len(cleaned_text.strip()) < 50:
+                print("Not enough content to summarize.")
+                return None
+            print("Cleaning finished. Summarizing to start soon...")
+            return cleaned_text
     except Exception as e:
-        print(f"An error occurred while scraping or summarizing: {e}")
+        print(f"An error occurred while scraping : {e}")
         return None
-

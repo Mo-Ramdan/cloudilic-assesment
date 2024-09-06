@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
-from utils import scrape_then_summarize
-from models import UrlRequest
+from utils import scrape_url , summarize_text
+from models import UrlRequest , SummarizeRequest
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 import os 
@@ -18,21 +18,29 @@ app.add_middleware(
     allow_headers=["*"], 
 )
 
-@app.post("/scrape-summary")
+@app.post("/scrape")
 async def scrape_and_summarize(request: UrlRequest):
     url = request.url
     try:
         logger.info(f"Scraping and summarizing: {url}")
-        summary = scrape_then_summarize(url)
-        if not summary:
-            logger.warning(f"No Summary return for URL: {url}")
+        scrapped_data = scrape_url(url)
+        if not scrapped_data:
+            logger.warning(f"No scrapped data return for URL: {url}")
             raise HTTPException(
-                status_code=404, detail="Summary not found or scraping failed"
+                status_code=404, detail="scraping url failed"
             )
     except Exception as e:
         logger.error(f"Error occurred during scraping: {e}")
         raise HTTPException(status_code=400, detail="Can't scrape or summarize")
-    return {"data": summary}
+    return {"data": scrapped_data}
+
+
+@app.post("/summarize")
+async def summarize(text: SummarizeRequest):
+    summary = summarize_text(text.data)
+    if not summary:
+        raise HTTPException(status_code=400, detail="Can't summarize")
+    return summary
 
 @app.get("/health")
 async def health_check():
