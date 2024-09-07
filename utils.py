@@ -20,11 +20,14 @@ def summarize_text(input_text):
     try:
         res = client.chat.completions.create(
             messages=[
-                {"role": "system", "content": f"Summarize this text in meaningful terms and no more than 200 words:\n\n{input_text}"},
+                {
+                    "role": "user",
+                    "content": f"Summarize this text in meaningful and concise terms and no more than 320 words. Return only the summary:\n\n{input_text}",
+                },
             ],
             temperature=0.3,
-            max_tokens=200,
-            model="llama3-8b-8192",
+            max_tokens=320,
+            model="llama-3.1-8b-instant",
         )
 
     except Exception as e:
