@@ -1,22 +1,37 @@
-from dotenv import load_dotenv
-import os
-from groq import Groq
 import requests
 from bs4 import BeautifulSoup
 from nltk.tokenize import sent_tokenize
-import nltk
+from llm import client
 
-load_dotenv(".env")
 
-client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-nltk.download("punkt_tab")
+
+
 def clean_text(text):
+    """
+    Clean a given text by extracting only the first 50 sentences of it.
+
+    Args:
+        text (str): The text to be cleaned.
+
+    Returns:
+        str: The cleaned text.
+    """
+
     sentences = sent_tokenize(text)
     cleaned_text = ' '.join(sentences[:50])
     return cleaned_text
 
 def summarize_text(input_text):
+    """
+    Summarize a given text using Groq's chat completion API.
+
+    Args:
+        input_text (str): The text to be summarized.
+
+    Returns:
+        dict: A dictionary with a single key-value pair, where the key is "data" and the value is the summarized text.
+    """
     try:
         res = client.chat.completions.create(
             messages=[
@@ -42,6 +57,16 @@ def summarize_text(input_text):
     return {"data": summary}
 
 def scrape_url(url:str):
+    
+    """
+    Scrape a given URL, extract all text from the page, clean it up, and return the cleaned text.
+
+    Args:
+        url (str): The URL of the page to scrape.
+
+    Returns:
+        str: The cleaned text. If the request fails or the page does not have enough content to summarize, None is returned.
+    """
     try:
             response = requests.get(url)
             if response.status_code != 200:
