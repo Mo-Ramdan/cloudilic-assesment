@@ -37,12 +37,8 @@ def summarize_text(input_text):
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a helpful and smart assistant.that summarizes text in meaningful and concise terms and no more than 320 words. Return only the summary.",
-                },
-                {
-                    "role": "user",
-                    "content": f"Summarize this text:\n\n{input_text}",
-                },
+                    "content": f"You are a helpful and smart assistant.that summarizes text in meaningful and concise terms and no more than 320 words. Return only the summary:\n\n{input_text}.",
+                }
             ],
             temperature=0.5,
             max_tokens=320,

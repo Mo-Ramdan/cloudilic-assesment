@@ -46,7 +46,7 @@ async def scrape_and_summarize(request: UrlRequest):
             )
     except Exception as e:
         logger.error(f"Error occurred during scraping: {e}")
-        raise HTTPException(status_code=400, detail="Can't scrape or summarize")
+        raise HTTPException(status_code=400, detail="Can't scrape")
     return {"data": scrapped_data}
 
 
