@@ -5,6 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 import logging
 import os 
 import nltk
+from dotenv import load_dotenv
+
+
+load_dotenv(".env")
 
 nltk.download("punkt_tab")
 app = FastAPI()
